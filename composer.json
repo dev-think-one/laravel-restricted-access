@@ -1,0 +1,60 @@
+{
+    "name": "yaroslawww/laravel-restricted-access",
+    "description": "Restrict access to several entities or pages.",
+    "keywords": [
+        "laravel",
+        "access",
+        "restricted-access"
+    ],
+    "homepage": "https://github.com/yaroslawww/laravel-restricted-access",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Yaroslav Georgitsa",
+            "email": "yaroslav.georgitsa@gmail.com",
+            "homepage": "https://github.com/yaroslawww",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^9.0|^10.0",
+        "yaroslawww/laravel-json-field-cast": "^2.1"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.14",
+        "orchestra/testbench": "^8.0",
+        "phpunit/phpunit": "^10.0",
+        "psalm/plugin-laravel": "^2.0",
+        "vimeo/psalm": "^5.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "LinkRestrictedAccess\\": "src",
+            "LinkRestrictedAccess\\Database\\Factories\\": "database/factories/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LinkRestrictedAccess\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "XDEBUG_MODE=coverage vendor/bin/phpunit",
+        "test-coverage": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage",
+        "format": "vendor/bin/php-cs-fixer fix --allow-risky=yes",
+        "psalm": "vendor/bin/psalm"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "LinkRestrictedAccess\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
