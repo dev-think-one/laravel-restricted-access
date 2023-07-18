@@ -3,6 +3,7 @@
 namespace LinkRestrictedAccess\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,11 @@ class RestrictedLink extends Model
         'meta'                 => SimpleJsonField::class,
     ];
 
+    protected $accessConfigsMap = [
+        'checkName'               => 'use_name',
+        'checkEmail'              => 'use_email',
+    ];
+
     public function getTable(): string
     {
         return config('restricted-access.tables.links');
@@ -53,7 +59,7 @@ class RestrictedLink extends Model
 
     public function openActions(): HasMany
     {
-        return $this->hasMany(RestrictedAccess::modelClass('open'), 'link_id', 'id');
+        return $this->hasMany(RestrictedAccess::linkOpenActionModel(), 'link_id', 'id');
     }
 
     public function checkPin(): Attribute
@@ -66,15 +72,17 @@ class RestrictedLink extends Model
         );
     }
 
-    public function checkName(): Attribute
+    protected function getAccessConfig(string $key): Attribute
     {
+        $field = $this->accessConfigsMap[$key]??Str::snake($key);
+
         return Attribute::make(
-            fn () => (bool)$this->access_configuration->getDateAttribute('use_name'),
-            function ($value) {
+            fn () => (bool)$this->access_configuration->getDateAttribute($field),
+            function ($value) use ($field) {
                 if ($value) {
-                    $this->access_configuration->setDate('use_name', $this->access_configuration->getDateAttribute('use_name', Carbon::now()));
+                    $this->access_configuration->setDate($field, $this->access_configuration->getDateAttribute($field, Carbon::now()));
                 } else {
-                    $this->access_configuration->removeAttribute('use_name');
+                    $this->access_configuration->removeAttribute($field);
                 }
 
                 return [];
@@ -82,20 +90,14 @@ class RestrictedLink extends Model
         );
     }
 
+    public function checkName(): Attribute
+    {
+        return $this->getAccessConfig(__FUNCTION__);
+    }
+
     public function checkEmail(): Attribute
     {
-        return Attribute::make(
-            fn () => (bool)$this->access_configuration->getDateAttribute('use_email'),
-            function ($value) {
-                if ($value) {
-                    $this->access_configuration->setDate('use_email', $this->access_configuration->getDateAttribute('use_email', Carbon::now()));
-                } else {
-                    $this->access_configuration->removeAttribute('use_email');
-                }
-
-                return [];
-            },
-        );
+        return $this->getAccessConfig(__FUNCTION__);
     }
 
     public function needVerification(): bool
@@ -119,7 +121,7 @@ class RestrictedLink extends Model
     {
         $openUuid = $request->cookie($this->cookieName());
         if ($openUuid) {
-            return RestrictedAccess::modelClass('open')::query()->where('uuid', $openUuid)->first();
+            return RestrictedAccess::linkOpenActionModel()::query()->where('uuid', $openUuid)->first();
         }
 
         return null;
@@ -133,6 +135,21 @@ class RestrictedLink extends Model
         }
 
         return null;
+    }
+
+    public static function scopeByKey(Builder $query, string $uuid, Model|int|null $relatedModel = null): Builder
+    {
+        $query->where('uuid', $uuid);
+
+        if ($relatedModel) {
+            if ($relatedModel instanceof Model) {
+                $relatedModel = $relatedModel->getKey();
+            }
+
+            $query->whereHas('linkable', fn (Builder $q) => $q->whereKey($relatedModel));
+        }
+
+        return $query;
     }
 
     protected static function newFactory(): RestrictedLinkFactory

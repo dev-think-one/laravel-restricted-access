@@ -3,7 +3,7 @@
 namespace LinkRestrictedAccess\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use LinkRestrictedAccess\Tests\Fixtures\User;
+use LinkRestrictedAccess\Tests\Fixtures\Models\User;
 use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra

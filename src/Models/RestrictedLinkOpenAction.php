@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use JsonFieldCast\Casts\SimpleJsonField;
 use LinkRestrictedAccess\Database\Factories\RestrictedLinkOpenActionFactory;
-use LinkRestrictedAccess\RestrictedAccess;
 
 /**
  * @property \JsonFieldCast\Json\SimpleJsonField $verification_result
@@ -47,7 +46,7 @@ class RestrictedLinkOpenAction extends Model
 
     public function link(): BelongsTo
     {
-        return $this->belongsTo(RestrictedAccess::modelClass('link'), 'link_id', 'id');
+        return $this->belongsTo(\LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel(), 'link_id', 'id');
     }
 
     public function viewer(): MorphTo

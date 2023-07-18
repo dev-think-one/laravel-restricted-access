@@ -7,14 +7,13 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Validation\ValidationException;
 use LinkRestrictedAccess\Models\RestrictedLink;
-use LinkRestrictedAccess\RestrictedAccess;
 
 class CheckPinController extends Controller
 {
     public function __invoke(Request $request)
     {
         /** @var RestrictedLink $restrictedLink */
-        $restrictedLink = RestrictedAccess::modelClass('link')::query()
+        $restrictedLink = \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::query()
             ->where('uuid', $request->route('uuid'))
             ->firstOrFail();
 

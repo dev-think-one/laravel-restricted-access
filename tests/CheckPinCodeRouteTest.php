@@ -29,4 +29,16 @@ class CheckPinCodeRouteTest extends TestCase
 
         $response->assertJsonPath('data.success', true);
     }
+
+    /** @test */
+    public function if_no_json_hearers_do_redirect()
+    {
+        $link = RestrictedLink::factory()->linkable($this->createUser())->usePin(7676)->create();
+
+        $response = $this->post(route('restricted-access-link.check-pin', $link->uuid), [
+            'pin' => '7676',
+        ]);
+
+        $response->assertRedirect();
+    }
 }

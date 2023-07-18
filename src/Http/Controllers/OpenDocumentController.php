@@ -11,14 +11,13 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use LinkRestrictedAccess\Models\RestrictedLink;
 use LinkRestrictedAccess\Models\RestrictedLinkOpenAction;
-use LinkRestrictedAccess\RestrictedAccess;
 
 class OpenDocumentController extends Controller
 {
     public function __invoke(Request $request)
     {
         /** @var RestrictedLink $restrictedLink */
-        $restrictedLink = RestrictedAccess::modelClass('link')::query()
+        $restrictedLink = \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::query()
             ->where('uuid', $request->route('uuid'))
             ->firstOrFail();
 

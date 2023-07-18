@@ -4,7 +4,6 @@ namespace LinkRestrictedAccess\Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use LinkRestrictedAccess\Models\RestrictedLinkOpenAction;
-use LinkRestrictedAccess\RestrictedAccess;
 
 class RestrictedLinkOpenActionFactory extends Factory
 {
@@ -13,7 +12,8 @@ class RestrictedLinkOpenActionFactory extends Factory
     public function definition(): array
     {
         return [
-            'link_id' => RestrictedAccess::modelClass('link')->factory(),
+            'link_id' => \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::factory(),
+            'browser_fingerprint' => fake()->word(),
         ];
     }
 }

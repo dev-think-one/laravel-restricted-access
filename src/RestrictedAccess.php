@@ -8,18 +8,21 @@ use LinkRestrictedAccess\Models\RestrictedLinkOpenAction;
 
 class RestrictedAccess
 {
+    const MODEL_KEY_LINK = 'link';
+    const MODEL_KEY_OPEN = 'open';
+
     public static bool $runsMigrations = true;
 
     public static bool $registersRoutes = true;
 
-    public static array $classMap = [];
-
     protected static array $models = [
-        'link' => RestrictedLink::class,
-        'open' => RestrictedLinkOpenAction::class,
+        self::MODEL_KEY_LINK => RestrictedLink::class,
+        self::MODEL_KEY_OPEN => RestrictedLinkOpenAction::class,
     ];
 
-
+    /**
+     * Disable provided by packages migrations.
+     */
     public static function ignoreMigrations(): static
     {
         static::$runsMigrations = false;
@@ -27,35 +30,14 @@ class RestrictedAccess
         return new static;
     }
 
+    /**
+     * Disable provided by packages routes.
+     */
     public static function ignoreRoutes(): static
     {
         static::$registersRoutes = false;
 
         return new static;
-    }
-
-    /**
-     * @param array|null $map
-     * @param bool $merge Merge or replace class map.
-     * @return array
-     */
-    public static function classMap(array $map = null, bool $merge = true): array
-    {
-        if (is_array($map)) {
-            static::$classMap = $merge && static::$classMap
-                ? $map + static::$classMap : $map;
-        }
-
-        return static::$classMap;
-    }
-
-    /**
-     * @param string $alias
-     * @return string|null
-     */
-    public static function getMappedClass(string $alias): ?string
-    {
-        return static::$classMap[$alias] ?? null;
     }
 
     /**
@@ -106,5 +88,25 @@ class RestrictedAccess
         $model = new $modelClass($attributes);
 
         return $model;
+    }
+
+
+    /**
+     * @return class-string<RestrictedLink>
+     * @throws \Exception
+     */
+    public static function restrictedLinkModel(): string
+    {
+        return static::modelClass(self::MODEL_KEY_LINK);
+    }
+
+
+    /**
+     * @return class-string<RestrictedLinkOpenAction>
+     * @throws \Exception
+     */
+    public static function linkOpenActionModel(): string
+    {
+        return static::modelClass(self::MODEL_KEY_OPEN);
     }
 }

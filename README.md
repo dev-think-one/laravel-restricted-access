@@ -23,6 +23,8 @@ Optionally you can publish the config file with:
 php artisan vendor:publish --provider="LinkRestrictedAccess\ServiceProvider" --tag="config"
 ```
 
+If you want change tables names or routes, you can do it via config file.
+
 Run migrations:
 
 ```shell
@@ -63,7 +65,8 @@ Example check verification.
 
 ```php
 if($shareUuid = $request->string('share')) {
-    $sharedLink = RestrictedLink::query()->where('uuid', $shareUuid)->firstOrFail();
+
+    $sharedLink = \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::query()->where('uuid', $shareUuid)->firstOrFail();
 
     if (!$sharedLink->needVerification()) {
         if (!$sharedLink->verifiedOpenActionFromCookie($request)) {
