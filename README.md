@@ -66,12 +66,10 @@ Example check verification.
 ```php
 if($shareUuid = $request->string('share')) {
 
-    $sharedLink = \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::query()->where('uuid', $shareUuid)->firstOrFail();
+    $sharedLink = \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::query()->byKey($shareUuid)->firstOrFail();
 
-    if (!$sharedLink->needVerification()) {
-        if (!$sharedLink->verifiedOpenActionFromCookie($request)) {
-            return // display verification view
-        }
+    if ($sharedLink->needVerification() && !$sharedLink->verifiedOpenActionFromCookie($request)) {
+        return // display verification view
     }
 
     return $sharedLink->linkable;

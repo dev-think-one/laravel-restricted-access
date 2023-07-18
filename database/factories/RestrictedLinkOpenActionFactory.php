@@ -12,7 +12,7 @@ class RestrictedLinkOpenActionFactory extends Factory
     public function definition(): array
     {
         return [
-            'link_id' => \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::factory(),
+            'link_id'             => \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::factory(),
             'browser_fingerprint' => fake()->word(),
         ];
     }

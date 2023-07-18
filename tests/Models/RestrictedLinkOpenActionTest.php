@@ -50,7 +50,7 @@ class RestrictedLinkOpenActionTest extends TestCase
     public function verification()
     {
         $request = app(Request::class);
-        $user = $this->createUser();
+        $user    = $this->createUser();
 
         $link = \LinkRestrictedAccess\RestrictedAccess::restrictedLinkModel()::factory()
             ->linkable($user)

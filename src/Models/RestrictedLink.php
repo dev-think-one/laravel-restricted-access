@@ -31,8 +31,8 @@ class RestrictedLink extends Model
     ];
 
     protected $accessConfigsMap = [
-        'checkName'               => 'use_name',
-        'checkEmail'              => 'use_email',
+        'checkName'  => 'use_name',
+        'checkEmail' => 'use_email',
     ];
 
     public function getTable(): string
@@ -72,9 +72,13 @@ class RestrictedLink extends Model
         );
     }
 
-    protected function getAccessConfig(string $key): Attribute
+    protected function getAccessConfig(?string $key = null): ?Attribute
     {
-        $field = $this->accessConfigsMap[$key]??Str::snake($key);
+        if (!$key) {
+            return Attribute::get(fn () => null);
+        }
+
+        $field = $this->accessConfigsMap[$key] ?? Str::snake($key);
 
         return Attribute::make(
             fn () => (bool)$this->access_configuration->getDateAttribute($field),
@@ -130,7 +134,7 @@ class RestrictedLink extends Model
     public function verifiedOpenActionFromCookie(\Illuminate\Http\Request $request): ?RestrictedLinkOpenAction
     {
         $open = $this->openActionFromCookie($request);
-        if($open?->verified($request)) {
+        if ($open?->verified($request)) {
             return $open;
         }
 
