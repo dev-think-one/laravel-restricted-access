@@ -1,17 +1,17 @@
 {
-    "name": "yaroslawww/laravel-restricted-access",
-    "description": "Restrict access to several entities or pages.",
+    "name": "think.studio/laravel-restricted-access",
+    "description": "Restrict access to any entities or pages, or create share links.",
     "keywords": [
         "laravel",
         "access",
         "restricted-access"
     ],
-    "homepage": "https://github.com/yaroslawww/laravel-restricted-access",
+    "homepage": "https://github.com/dev-think-one/laravel-restricted-access",
     "license": "MIT",
     "authors": [
         {
             "name": "Yaroslav Georgitsa",
-            "email": "yaroslav.georgitsa@gmail.com",
+            "email": "yg@think.studio",
             "homepage": "https://github.com/yaroslawww",
             "role": "Developer"
         }
